@@ -87,6 +87,10 @@ p { color: var(--text-gray); font-size: 1.1rem; line-height: 1.6; }
 @media (max-width: 768px) {
     .logo-img { height: 40px; }
     .footer-logo-img { height: 45px; }
+    .btn-primary-small{
+        width: 80vw;
+        font-size: 1rem;
+    }
 }
 
 .nav-links {
@@ -627,7 +631,7 @@ footer {
 .floating-icon {
     position: absolute;
     font-size: 2.5rem;
-    opacity: 0.3;
+    opacity: 0.5; /* Increased for light background */
     animation: float 6s ease-in-out infinite;
 }
 .icon-1 { top: 15%; left: 10%; animation-duration: 7s; } /* Coin */
@@ -1320,7 +1324,7 @@ css
 }
 .trust-logo {
     font-weight: 700;
-    color: #fff;
+    /* color: #fff; */
     font-size: 1rem;
     opacity: 0.7;
 }
@@ -1342,10 +1346,10 @@ css
 .bloom-step {
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0,0,0,0.08);
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     text-align: center;
-    max-width: 300px;
+    /* max-width: 300px; */
     flex: 1;
     position: relative;
     transition: transform 0.3s;
@@ -1713,14 +1717,14 @@ button[type="submit"]:active {
     font-family: var(--font-heading);
     font-weight: 700;
     color: var(--primary);
-    opacity: 0.05; /* Very subtle */
+    opacity: 0.15; /* Increased for light background visibility */
     font-size: 10rem;
     animation: float 10s ease-in-out infinite;
 }
 
 .shape-1 { top: 10%; left: -5%; animation-duration: 12s; }
 .shape-2 { bottom: 10%; right: -5%; animation-duration: 15s; animation-delay: 2s; }
-.shape-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.03; font-size: 20rem; }
+.shape-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.08; font-size: 20rem; }
 
 /* 2. FAQ Container (Above Background) */
 .faq-container {
@@ -1885,7 +1889,7 @@ button[type="submit"]:active {
 
     /* --- 4. Text Links (The Science, Institutions) --- */
     .nav-links a {
-        font-size: 1.3rem;       /* Large readable text */
+        font-size: 1.18rem;       /* Large readable text */
         color: var(--text-white) !important;  /* Force dark text */
         text-decoration: none;
         display: block;
