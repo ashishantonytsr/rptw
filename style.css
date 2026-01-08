@@ -265,8 +265,8 @@ p { color: var(--text-gray); font-size: 1.1rem; line-height: 1.6; }
     position: relative;
     width: 45%;
     border: 1px solid rgba(0,0,0,0.08);
-    transition: transform 0.3s;
-    /* cursor: pointer; */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 .realm-card:hover { transform: translateY(-10px); border-color: var(--primary); }
@@ -310,11 +310,17 @@ p { color: var(--text-gray); font-size: 1.1rem; line-height: 1.6; }
 }
 
 .bento-card {
-    background: var(--bg-card);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 40px;
-    border-radius: 30px;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
 }
 
 .highlight-card {
@@ -373,6 +379,9 @@ footer {
     padding: 30px;
     border-radius: 20px;
     transition: all 0.3s;
+    position: relative;
+    margin-top: 20px;
+    text-align: center;
 }
 .inventory-card:hover {
     background: var(--bg-card);
@@ -380,6 +389,21 @@ footer {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 .item-icon { font-size: 2.5rem; margin-bottom: 15px; }
+
+/* Inventory card icon absolute positioning */
+.inventory-card .item-icon {
+    position: absolute;
+    top: -30px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid rgba(0,0,0,0.08);
+    width: 60px; height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 0;
+}
+.inventory-card h4 { margin-top: 25px; }
 
 /* --- Pricing (Guilds) --- */
 .pricing-section { padding: 100px 5%; background: #f1f5f9; }
@@ -426,16 +450,9 @@ footer {
 .period { font-size: 1rem; color: var(--text-gray); font-weight: 400; }
 .features-list { list-style: none; margin: 30px 0; text-align: left; }
 .features-list li { margin-bottom: 15px; color: var(--text-gray); }
-.full-width { width: 100%; margin-left: 0; }
 
 /* --- Reviews (Trading Cards) --- */
-.reviews-section { padding: 100px 5%; background: #f8fafc; }
-.reviews-scroller {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-}
+.reviews-section { padding: 100px 5%; background: #f8fafc; overflow: hidden; }
 .trading-card {
     background: linear-gradient(145deg, #ffffff, #f1f5f9);
     border: 1px solid rgba(0,0,0,0.08);
@@ -455,33 +472,7 @@ footer {
 .author { text-align: right; font-weight: 700; color: var(--primary); }
 
 /* --- FAQ (Accordion) --- */
-.faq-section { padding: 80px 5%; background: #f1f5f9; }
-.faq-container { max-width: 800px; margin: 0 auto; }
-.faq-item { margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.08); }
-.faq-question {
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    padding: 20px 0;
-    color: var(--text-white);
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding-right: 20px;
-}
-.faq-answer p { padding-bottom: 20px; }
-.faq-question .icon { transition: transform 0.3s; font-size: 1.5rem; color: var(--primary); }
-.faq-item.active .faq-answer { max-height: 200px; } /* Adjust if content is long */
-.faq-item.active .icon { transform: rotate(45deg); }
+/* Note: Main FAQ styling moved to V5.5 section below */
 
 /* --- Download & Footer --- */
 .download-section {
@@ -569,6 +560,9 @@ footer {
     display: flex;
     gap: 15px;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 .social-icons a {
@@ -619,6 +613,8 @@ footer {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 /* 2. Hero: Parallax Icons */
@@ -666,13 +662,7 @@ footer {
 /* VERSION 3.1 UPDATE: HORIZONTAL DRAWER     */
 /* ========================================= */
 
-/* Base Card Styling */
-.realm-card {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative; /* Anchor for absolute positioning */
-    z-index: 1; /* Default z-index */
-    background: var(--bg-card);
-}
+/* Base Card Styling - see main .realm-card definition above */
 
 .realm-card .card-content p {
     color: var(--text-gray);
@@ -791,10 +781,7 @@ footer {
 }
 
 /* 5. School Section (Institutional Blue) */
-:root {
-    --school-blue: #3b82f6;
-    --school-dark: #f1f5f9;
-}
+/* Note: --school-blue: #3b82f6 and --school-dark: #f1f5f9 available for school theming */
 .schools-section {
     padding: 100px 5%;
     /* Keep background light to match main theme */
@@ -841,7 +828,7 @@ footer {
 }
 .btn-school:hover { background: #16a34a; }
 
-.school-visual { flex: 1; display: flex; justify-content: center; }
+.school-visual { flex: 1; display: flex; justify-content: center; flex-direction: column; align-items: center; }
 .dashboard-mockup {
     background: #ffffff;
     width: 100%;
@@ -858,13 +845,15 @@ footer {
 }
 .dash-header { height: 10px; width: 90%; background: rgba(0,0,0,0.08); border-radius: 10px; position: absolute; top: 20px; left: 20px; }
 .dash-graph { display: flex; align-items: flex-end; gap: 15px; height: 120px; margin-bottom: 20px; }
-.bar { 
+.dash-graph .bar { 
     flex: 1; 
-    background: var(--primary); /* Green Bars */
+    background: var(--primary);
     border-radius: 5px 5px 0 0; 
-    opacity: 0.7; 
+    opacity: 0.7;
+    height: auto;
+    margin-top: 0;
 }
-.bar:nth-child(even) { opacity: 0.4; }
+.dash-graph .bar:nth-child(even) { opacity: 0.4; }
 .dash-label { font-size: 0.9rem; font-weight: 700; color: var(--text-white); border-top: 1px solid rgba(0,0,0,0.08); padding-top: 15px; }
 
 /* 6. Safety Strip */
@@ -929,7 +918,6 @@ footer {
 }
 
 /* 3. Infinite Scroll Reviews */
-.reviews-section { overflow: hidden; } /* Hide overflow */
 .reviews-scroller { display: none; } /* Hide old one */
 
 .marquee-wrapper {
@@ -995,23 +983,9 @@ footer {
     */
 }
 
-/* 5. Inventory Icons on Top */
-.inventory-card { position: relative; margin-top: 20px; text-align: center; }
-.inventory-card .item-icon {
-    position: absolute;
-    top: -30px; left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-card);
-    border: 1px solid rgba(0,0,0,0.08);
-    width: 60px; height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.inventory-card h4 { margin-top: 25px; } /* Push text down */
+/* 5. Inventory Icons - see main .inventory-card definition above */
 
 /* 6. School Logos */
-.school-visual { flex-direction: column; align-items: center; }
 .school-logos {
     margin-top: 20px;
     display: flex;
@@ -1027,28 +1001,11 @@ footer {
 /* VERSION 3.3 UPDATES                       */
 /* ========================================= */
 
-/* FIXED: Holographic Engine Cards (Unified Background) */
-.bento-card {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    /* FIX: Use a single unified background instead of the masking trick */
-    background: linear-gradient(145deg, #ffffff, #f8fafc); 
-    border: 1px solid rgba(0, 0, 0, 0.08); 
-    border-radius: 20px; /* Ensure radius is applied here */
-    
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-}
-
-/* New Hover Effect: Glow comes from border and shadow now */
+/* Bento Card Hover Effect */
 .bento-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(34, 197, 94, 0.5); /* Green border glow */
-    box-shadow: 0 15px 40px rgba(34, 197, 94, 0.1); /* Green ambient glow */
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 15px 40px rgba(34, 197, 94, 0.1);
 }
 
 /* Ensure content sits above the icon */
@@ -1127,21 +1084,7 @@ footer {
 /* VERSION 4.0: RESPONSIVE & MOBILE (Media Queries) */
 /* ========================================= */
 
-/* 1. Hamburger Menu Styles (Hidden on Desktop) */
-.hamburger {
-    display: none;
-    cursor: pointer;
-    flex-direction: column;
-    gap: 5px;
-    z-index: 2000; /* Above overlay */
-}
-.hamburger .bar {
-    width: 25px;
-    height: 3px;
-    background-color: var(--text-white);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
+/* Hamburger Menu: See FRESH MOBILE MENU CODE section below */
 /* ========================================= */
 /* VERSION 4.1: REFINED MOBILE EXPERIENCE    */
 /* ========================================= */
@@ -1274,7 +1217,6 @@ footer {
     .footer-bottom { font-size: 0.75rem; }
 }
 
-css
 /* ========================================= */
 /* VERSION 5.0: B2B & PEDAGOGY UPDATES       */
 /* ========================================= */
@@ -1286,7 +1228,7 @@ css
     border-top: 1px solid rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 0;
     opacity: 0.8;
     flex-wrap: wrap;
 }
@@ -1294,13 +1236,19 @@ css
     font-size: 0.85rem;
     text-transform: uppercase;
     color: var(--text-gray);
-    margin-right: 10px;
+    margin-right: 15px;
 }
 .trust-logo {
     font-weight: 700;
     color: #000;
     font-size: 1rem;
     opacity: 0.7;
+    padding: 0 15px;
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    display: inline-block;
+}
+.trust-logo:last-child {
+    border-right: none;
 }
 
 /* 2. Pedagogy Section (The Science) */
@@ -1523,14 +1471,9 @@ css
 /* V5.3: GLOBAL BUTTON UNIFICATION           */
 /* ========================================= */
 
-/* 1. Define the Standard Shape & Font */
-:root {
-    --btn-radius: 12px; /* Standard Soft Square */
-    --btn-font: var(--font-body); /* Nunito */
-    --btn-weight: 700;
-}
+/* Button Standards: 12px radius, Nunito font, 700 weight */
 
-/* 2. Target ALL Button Classes */
+/* Target ALL Button Classes */
 button, 
 .btn-mega, 
 .btn-primary-small, 
@@ -1538,9 +1481,9 @@ button,
 .btn-school, 
 .store-btn {
     text-decoration: none !important;
-    font-family: var(--btn-font) !important;
-    font-weight: var(--btn-weight) !important;
-    border-radius: var(--btn-radius) !important;
+    font-family: var(--font-body) !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
     letter-spacing: 0.5px;
     text-transform: capitalize; /* Optional: Makes them look cleaner */
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s !important;
@@ -1610,47 +1553,17 @@ button[type="submit"]:active {
 
 .hero .cta-group .btn-mega,
 .hero .cta-group .btn-secondary {
-    padding: 12px 28px !important; /* Reduced from 18px 40px */
-    font-size: 1rem !important;    /* Reduced from 1.2rem */
-    min-width: 160px;              /* Ensures they don't get too thin */
-    justify-content: center;       /* Centers text/icon */
-}
-
-/* Optional: Adjust gap between them */
-.hero .cta-group {
-    gap: 15px; /* Tighter spacing */
+    padding: 12px 28px !important;
+    font-size: 1rem !important;
+    min-width: 160px;
+    justify-content: center;
 }
 
 /* ========================================= */
 /* V5.4: HERO SPACING & TRUST STRIP PIPES    */
 /* ========================================= */
 
-/* 1. Add Space Before Hero Buttons */
-.hero .cta-group {
-    margin-top: 50px !important; /* Increased from 30px */
-    margin-bottom: 20px; /* Optional: Space below buttons too */
-}
-
-/* 2. Distinct "Pipe" Separators for Schools */
-.hero-trust-strip {
-    gap: 0; /* Remove flex gap so borders touch nicely */
-}
-
-.trust-logo {
-    padding: 0 15px; /* Horizontal space inside the pipe */
-    border-right: 1px solid rgba(0, 0, 0, 0.3) !important; /* Visible pipe */
-    display: inline-block;
-}
-
-/* Remove the pipe from the last item */
-.trust-logo:last-child {
-    border-right: none !important;
-}
-
-/* Ensure the label "Trusted by:" has space */
-.hero-trust-strip span:first-child {
-    margin-right: 15px;
-}
+/* Hero and trust strip styles merged into main definitions above */
 
 /* Mobile Adjustment: Wrap nicely */
 @media (max-width: 768px) {
@@ -1802,7 +1715,7 @@ button[type="submit"]:active {
     cursor: pointer;
 }
 
-.bar {
+.hamburger .bar {
     display: block;
     width: 25px;
     height: 3px;
@@ -1952,19 +1865,12 @@ button[type="submit"]:active {
     margin: 0;
 }
 
+/* Contact col styling */
 .contact-col {
     display: flex;
     flex-direction: column;
-    align-items: center; /* CRITICAL: Centers everything horizontally */
-    text-align: center;  /* Centers the text inside the links */
-}
-
-.social-icons {
-    display: flex;
-    justify-content: center; /* Centers the icons within their container */
-    gap: 15px;
-    margin-bottom: 15px;     /* Spacing before contact info */
-    width: 100%;
+    align-items: center;
+    text-align: center;
 }
 
 /* Update Contact Details to align nicely in the center */
@@ -2013,12 +1919,16 @@ button[type="submit"]:active {
 
     /* 4. Fix Link Alignment (Column 2) */
     .links-col {
-        align-items: center !important; /* Override desktop left-align */
+        align-items: center !important;
+        text-align: center !important;
     }
     
     .links-col a {
-        padding: 8px 0;              /* Easier to tap on mobile */
-        font-size: 1.1rem;           /* Slightly bigger text */
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+        font-size: 1.1rem;
+        text-align: center;
     }
 
     /* 5. Fix Contact/Socials (Column 3) */
@@ -2031,24 +1941,11 @@ button[type="submit"]:active {
         margin-bottom: 20px;
     }
 
-    /* 1. Fix the Middle Column (Links) */
-    .links-col {
-        align-items: center !important; /* Force items to center axis */
-        text-align: center !important;  /* Force text to center */
-    }
-
-    /* 2. Fix the Headers (Socials, Quick Links) */
+    /* 6. Fix the Headers (Socials, Quick Links) */
     .footer-col h4 {
         text-align: center !important;
-        width: 100%; /* Ensures the header takes full width to center properly */
-        margin-bottom: 20px; /* Adds a bit of breathing room */
-    }
-
-    /* 3. Ensure Links inside the column are centered */
-    .links-col a {
-        display: block; /* Make them behave like blocks */
-        width: 100%;    /* Take full width */
-        text-align: center; 
+        width: 100%;
+        margin-bottom: 20px;
     }
 }
 
