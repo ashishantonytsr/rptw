@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // 1. Scroll Reveal Animation (Observer API)
     // This makes elements slide up as the user scrolls down
     const revealElements = document.querySelectorAll('.reveal');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         floatingCard.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
     });
 
-    
+
     // 3. Button Click "Squish" Sound Effect (Optional Placeholder)
     const buttons = document.querySelectorAll('.btn-mega, .btn-primary-small');
     buttons.forEach(btn => {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
-        
+
         question.addEventListener('click', () => {
             // Close other open items (optional - removing this line makes multiple open allowed)
             faqItems.forEach(otherItem => {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleCard(element) {
         // We removed the window.innerWidth check.
         // Now, clicking works on Desktop (as a toggle) AND Mobile.
-        
+
         // Toggle the class 'expanded' on the clicked card
         element.classList.toggle('expanded');
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = parseInt(el.getAttribute('data-target'));
         const duration = 2000; // Animation duration in ms
         const step = target / (duration / 16); // 60fps
-        
+
         let current = 0;
         const timer = setInterval(() => {
             current += step;
@@ -168,10 +168,10 @@ function closeMenu() {
 function toggleFaq(element) {
     // 1. Get the parent .faq-item
     const item = element.parentElement;
-    
+
     // 2. Toggle the 'active' class
     item.classList.toggle('active');
-    
+
     // 3. Optional: Close others (Accordion Style)
     // Uncomment lines below if you want only one open at a time
     /*
@@ -217,22 +217,49 @@ const form = document.forms['contactForm'];
 if (form) {
     form.addEventListener('submit', e => {
         e.preventDefault();
-        
-        // Change button text to indicate loading
-        const btn = form.querySelector('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "Transmitting...";
-        
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                alert("Transmission Received! We will contact you shortly.");
-                btn.innerHTML = originalText;
-                form.reset();
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                btn.innerHTML = "Error! Try again.";
-            });
+
+        // Get form data
+        const formData = new FormData(form);
+        const name = formData.get('name');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        // UI Update: Loading State
+        submitBtn.innerHTML = "Sending Transmission... 📡";
+        submitBtn.disabled = true;
+
+        // Send to Google Sheets
+        fetch(scriptURL, { 
+            method: 'POST', 
+            body: formData,
+            mode: 'no-cors' // Common for Google Apps Script to avoid CORS issues
+        })
+        .then(() => {
+            // UI Update: Success State
+            submitBtn.style.background = "#22c55e";
+            submitBtn.innerHTML = "Success! ✅";
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'thank-you.html';
+            }, 1500);
+        })
+        .catch(err => {
+            console.error("Logging failed:", err);
+            
+            // UI Update: Error State
+            submitBtn.style.background = "#ef4444";
+            submitBtn.innerHTML = "Transmission Failed ❌";
+            
+            alert("There was an error sending your transmission. Please check your connection or try again.");
+            
+            // Re-enable after delay
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.style.background = ""; // Reset to CSS default
+                submitBtn.innerHTML = originalBtnText;
+            }, 3000);
+        });
     });
 }
 
@@ -249,7 +276,7 @@ function toggleMobileMenu() {
 // 2. Closes the menu when a link is clicked
 function closeMenu() {
     const navMenu = document.querySelector('.nav-links');
-    
+
     // Only remove the class if it exists
     if (navMenu.classList.contains('active')) {
         navMenu.classList.remove('active');
