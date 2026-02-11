@@ -1,127 +1,158 @@
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. Scroll Reveal Animation (Observer API)
-    // This makes elements slide up as the user scrolls down
-    const revealElements = document.querySelectorAll('.reveal');
+/* ========================================= */
+/* CORE SITE LOGIC                           */
+/* ========================================= */
 
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Scroll Reveal Animation
+    const revealElements = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
             }
         });
-    }, {
-        threshold: 0.1 // Trigger when 10% of the element is visible
-    });
-
+    }, { threshold: 0.1 });
     revealElements.forEach(el => revealObserver.observe(el));
 
 
-    // 2. Hero Mouse Parallax Effect
-    // Moves the floating planets slightly when mouse moves
+    // 2. Hero & Floating Icon Parallax
     const heroSection = document.querySelector('.hero');
     const planets = document.querySelectorAll('.planet');
     const floatingCard = document.querySelector('.floating-card');
+    const icons = document.querySelectorAll('.floating-icon');
 
-    heroSection.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', (e) => {
         const x = e.clientX / window.innerWidth;
-        const y = e.clientY / window.innerHeight;
+        const y = window.innerHeight ? e.clientY / window.innerHeight : 0;
 
-        planets.forEach((planet, index) => {
-            const speed = (index + 1) * 20;
-            planet.style.transform = `translate(-${x * speed}px, -${y * speed}px)`;
+        // Section-specific parallax (only if hero exists)
+        if (heroSection && (e.target.closest('.hero') || heroSection.contains(e.target))) {
+            planets.forEach((planet, index) => {
+                const speed = (index + 1) * 20;
+                planet.style.transform = `translate(-${x * speed}px, -${y * speed}px)`;
+            });
+            if (floatingCard) {
+                floatingCard.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            }
+        }
+
+        // Global floaty icons
+        icons.forEach((icon, index) => {
+            const speed = (index + 1) * 15;
+            icon.style.transform = `translate(-${x * speed}px, -${y * speed}px)`;
         });
-
-        floatingCard.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
     });
 
-    
-    // 3. Button Click "Squish" Sound Effect (Optional Placeholder)
+
+    // 3. Button Interaction Sound (Placeholder)
     const buttons = document.querySelectorAll('.btn-mega, .btn-primary-small');
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // In a real build, play audio here: new Audio('pop.mp3').play();
-            console.log("Button clicked - add 'pop' sound here");
+            console.log("Button clicked - trigger audio feedback here.");
         });
     });
 
-    // ===============================================
-    // NEW JAVASCRIPT (Append inside the existing DOMContentLoaded)
-    // ===============================================
 
     // 4. FAQ Accordion Logic
     const faqItems = document.querySelectorAll('.faq-item');
-
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            // Close other open items (optional - removing this line makes multiple open allowed)
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item) otherItem.classList.remove('active');
+        if (question) {
+            question.addEventListener('click', () => {
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) otherItem.classList.remove('active');
+                });
+                item.classList.toggle('active');
             });
-
-            // Toggle current
-            item.classList.toggle('active');
-        });
+        }
     });
 
-    // ===============================================
-    // VERSION 3 JS UPDATES
-    // ===============================================
 
-    // 5. Card Expansion Logic (Fixed)
-    function toggleCard(element) {
-        // We removed the window.innerWidth check.
-        // Now, clicking works on Desktop (as a toggle) AND Mobile.
-        
-        // Toggle the class 'expanded' on the clicked card
+    // 5. Card Expansion Logic
+    window.toggleCard = function (element) {
         element.classList.toggle('expanded');
+        document.querySelectorAll('.realm-card').forEach(card => {
+            if (card !== element) card.classList.remove('expanded');
+        });
+    };
 
-        // Optional: Close other cards to keep UI clean
-        const allCards = document.querySelectorAll('.realm-card');
-        allCards.forEach(card => {
-            if (card !== element) {
-                card.classList.remove('expanded');
-            }
+
+    // 6. Mobile Menu Logic
+    const hamburger = document.getElementById('hamburger-btn');
+    const navMenu = document.getElementById('nav-menu');
+    const menuLinks = document.querySelectorAll('.nav-links a');
+
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
         });
     }
 
-    // 6. Enhanced Parallax (Floating Loot)
-    // We add the new icons to the existing mousemove listener
-    document.addEventListener('mousemove', (e) => {
-        const icons = document.querySelectorAll('.floating-icon');
-        const x = e.clientX / window.innerWidth;
-        const y = e.clientY / window.innerHeight;
 
-        icons.forEach((icon, index) => {
-            // Different speeds for depth effect
-            const speed = (index + 1) * 15;
-            // Move in opposite direction to mouse for depth
-            icon.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+    // 7. Form Submission (FormSubmit AJAX Method)
+    const scriptURL = 'https://formsubmit.co/ajax/sales@rockpapertution.com';
+    const form = document.getElementById('contactForm');
+
+    if (form) {
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const btn = form.querySelector('button[type="submit"]');
+            btn.innerHTML = "Transmitting... ⚡";
+            btn.disabled = true;
+
+            fetch(scriptURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(new FormData(form)))
+            })
+                .then(response => response.json())
+                .then(data => {
+                    btn.innerHTML = "Success! Redirecting...";
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.href = 'thank-you.html';
+                    }, 800);
+                })
+                .catch(error => {
+                    console.error('Error!', error);
+                    btn.innerHTML = "Transmission Failed. Try again.";
+                    btn.disabled = false;
+                    alert("Submission failed. If this is your first time, check your email to confirm FormSubmit activation.");
+                });
         });
-    });
+    }
 
-    // ===============================================
-    // VERSION 3.3 JS UPDATES (Number Counter)
-    // ===============================================
 
-    // 7. Animated Number Counter
+    // 8. Animated Number Counter
     const statsSection = document.querySelector('#counter-section');
     const statNumbers = document.querySelectorAll('.stat-number');
-    let started = false; // Flag to ensure animation runs only once
+    let started = false;
 
-    // Function to animate counts
     function startCount(el) {
         const target = parseInt(el.getAttribute('data-target'));
-        const duration = 2000; // Animation duration in ms
-        const step = target / (duration / 16); // 60fps
-        
+        if (isNaN(target)) return;
+        const duration = 2000;
+        const step = target / (duration / 16);
         let current = 0;
         const timer = setInterval(() => {
             current += step;
             if (current >= target) {
-                el.innerText = target + "+"; // Add plus sign at end
+                el.innerText = target + "+";
                 clearInterval(timer);
             } else {
                 el.innerText = Math.ceil(current);
@@ -129,146 +160,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 16);
     }
 
-    // Observer to trigger animation
     const statsObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && !started) {
             statNumbers.forEach(num => startCount(num));
-            started = true; // Stop it from running again
+            started = true;
         }
     }, { threshold: 0.5 });
 
     if (statsSection) {
         statsObserver.observe(statsSection);
     }
-});
-
-// ===============================================
-// VERSION 4.0 JS UPDATES (Mobile Menu)
-// ===============================================
-
-// Mobile Menu Logic (Re-verified)
-const hamburger = document.getElementById('hamburger-btn');
-const navMenu = document.getElementById('nav-menu');
-
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        // Toggle the active class which triggers the CSS max-height transition
-        navMenu.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    });
-}
-
-// Close Menu when a link is clicked
-function closeMenu() {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-
-function toggleFaq(element) {
-    // 1. Get the parent .faq-item
-    const item = element.parentElement;
-    
-    // 2. Toggle the 'active' class
-    item.classList.toggle('active');
-    
-    // 3. Optional: Close others (Accordion Style)
-    // Uncomment lines below if you want only one open at a time
-    /*
-    document.querySelectorAll('.faq-item').forEach(otherItem => {
-        if (otherItem !== item) {
-            otherItem.classList.remove('active');
-        }
-    });
-    */
-}
-
-/* --- FAQ Fix Snippet --- */
-document.addEventListener('DOMContentLoaded', () => {
-    const faqButtons = document.querySelectorAll('.faq-question');
-
-    faqButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // 1. Toggle the active class on the parent item
-            const faqItem = button.parentElement;
-            faqItem.classList.toggle('active');
-        });
-    });
-});
 
 
-/* ========================================= */
-/* SMART REVIEWS (Stop if < 4)               */
-/* ========================================= */
-
-document.addEventListener('DOMContentLoaded', () => {
-    const track = document.querySelector('.marquee-track');
-    const cards = document.querySelectorAll('.trading-card');
-
-    if (track && cards.length < 4) {
-        // Less than 4 cards? Stop animation and center them.
-        track.classList.add('static-mode');
+    // 9. Review Marquee Mode
+    const reviewTrack = document.querySelector('.marquee-track');
+    const reviewCards = document.querySelectorAll('.trading-card');
+    if (reviewTrack && reviewCards.length < 4) {
+        reviewTrack.classList.add('static-mode');
     }
-});
-
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzbbRH5U-nuIb_GoKlrfRG1j7_fEm4sSXXKs_krJGx-vEvMJuI6zg9D3ycQUo2yn25YIA/exec'; // PASTE YOUR URL HERE
-const form = document.forms['contactForm'];
-
-if (form) {
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        
-        // Change button text to indicate loading
-        const btn = form.querySelector('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "Transmitting...";
-        
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                btn.innerHTML = "Success! Redirecting...";
-                form.reset();
-                window.location.href = 'thank-you.html';
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                btn.innerHTML = "Transmission Failed. Try again.";
-                alert("Submission failed. Please check your connection and try again.");
-            });
-    });
-}
-
-/* ========================================= */
-/* MOBILE MENU LOGIC                         */
-/* ========================================= */
-
-// 1. Opens and Closes the menu
-function toggleMobileMenu() {
-    const navMenu = document.querySelector('.nav-links');
-    navMenu.classList.toggle('active');
-}
-
-// 2. Closes the menu when a link is clicked
-function closeMenu() {
-    const navMenu = document.querySelector('.nav-links');
-    
-    // Only remove the class if it exists
-    if (navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-    }
-}
-
-/* ========================================= */
-/* AUTO-CLOSE MENU ON CLICK                  */
-/* ========================================= */
-
-// 1. Select all links inside the mobile menu
-const menuLinks = document.querySelectorAll('.nav-links a');
-
-// 2. Add a click event to EACH link
-menuLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        // Remove the 'active' class to close the menu
-        navMenu.classList.remove('active');
-        hamburger.classList.remove('active'); // Resets the hamburger icon
-    });
 });

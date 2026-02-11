@@ -491,7 +491,12 @@
             </div>
 
             <div class="contact-card">
-                <form class="game-form" id="contactForm" method="POST">
+                <form class="game-form" id="contactForm" action="https://formsubmit.co/sales@rockpapertution.com"
+                    method="POST">
+                    <!-- FormSubmit Configuration -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_subject" value="New Transmission from Rock Paper Tuition">
                     <div class="form-group">
                         <label>Your Name</label>
                         <input type="text" name="name" placeholder="Commander Shepherd" required>
