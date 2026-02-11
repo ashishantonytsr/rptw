@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 7. Form Submission (FormSubmit AJAX Method)
-    const scriptURL = 'https://formsubmit.co/ajax/sales@rockpapertution.com';
+    const scriptURL = 'https://formsubmit.co/ajax/sales@rockpapertuition.com';
     const form = document.getElementById('contactForm');
 
     if (form) {
