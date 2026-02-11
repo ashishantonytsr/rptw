@@ -55,6 +55,7 @@ p {
 .gradient-text {
     background: linear-gradient(to right, var(--primary), var(--purple));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -369,7 +370,7 @@ p {
 footer {
     padding: 80px 5%;
     text-align: center;
-    background: radial-gradient(circle at top, #f1f5f9, #f8fafc);
+    background: #ffffff;
 }
 
 @keyframes float {
@@ -657,7 +658,7 @@ footer {
 
 .main-footer {
     padding: 40px 5% 40px;
-    background: #f1f5f9;
+    background: #ffffff;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -1309,6 +1310,7 @@ footer {
     font-family: var(--font-heading);
     background: linear-gradient(to bottom, #0f172a, #475569);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -2299,14 +2301,19 @@ button[type="submit"]:active {
 }
 
 a.method-row {
-    text-decoration: none; /* Removes underline */
-    color: inherit;        /* Keeps your original text colors */
+    text-decoration: none;
+    /* Removes underline */
+    color: inherit;
+    /* Keeps your original text colors */
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
-    display: flex;         /* Ensures flex layout is kept */
-    align-items: center;   /* Vertically align icon and text */
-    gap: 15px;             /* Space between icon and text */
-    
+    display: flex;
+    /* Ensures flex layout is kept */
+    align-items: center;
+    /* Vertically align icon and text */
+    gap: 15px;
+    /* Space between icon and text */
+
     /* Optional: Add a subtle border or padding if not already there */
     border-radius: 12px;
     padding: 10px;
@@ -2314,12 +2321,14 @@ a.method-row {
 
 /* Hover Effect: Make it look interactive */
 a.method-row:hover {
-    background: rgba(255, 255, 255, 0.05); /* Subtle highlight */
-    transform: translateX(5px);            /* Slight slide to the right */
+    background: rgba(255, 255, 255, 0.05);
+    /* Subtle highlight */
+    transform: translateX(5px);
+    /* Slight slide to the right */
 }
 
 /* Ensure the address text doesn't turn blue */
-a.method-row span, 
+a.method-row span,
 a.method-row strong {
-    color: inherit; 
+    color: inherit;
 }

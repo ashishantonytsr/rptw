@@ -225,13 +225,14 @@ if (form) {
         
         fetch(scriptURL, { method: 'POST', body: new FormData(form)})
             .then(response => {
-                alert("Transmission Received! We will contact you shortly.");
-                btn.innerHTML = originalText;
+                btn.innerHTML = "Success! Redirecting...";
                 form.reset();
+                window.location.href = 'thank-you.html';
             })
             .catch(error => {
                 console.error('Error!', error.message);
-                btn.innerHTML = "Error! Try again.";
+                btn.innerHTML = "Transmission Failed. Try again.";
+                alert("Submission failed. Please check your connection and try again.");
             });
     });
 }
